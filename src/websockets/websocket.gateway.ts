@@ -1,4 +1,5 @@
 import {
+  ConnectedSocket,
   MessageBody,
   OnGatewayConnection,
   OnGatewayDisconnect,
@@ -24,7 +25,10 @@ export class WebsocketGateway
   }
 
   @SubscribeMessage('message')
-  handleMessage(@MessageBody() message: string) {
-    this.server.emit('messageServer', `Text received: ${message}`);
+  handleMessage(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() message: string,
+  ) {
+    client.broadcast.emit('messageServer', message);
   }
 }
